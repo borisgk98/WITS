@@ -12,8 +12,10 @@ namespace WITS {
 	public:
 		void start() {
 			//TODO make menu
+			//TODO create player
 			//gameWindow.create(sf::VideoMode(), gameName, sf::Style::Fullscreen);
 			gameWindow.create(sf::VideoMode(1200, 800), gameName);
+			WITS::Map gameMap(mapSizeY + 1, mapSizeY);
 
 			while (gameWindow.isOpen()) {
 
@@ -27,7 +29,6 @@ namespace WITS {
 				}
 
 				//section generating objects
-				WITS::Map gameMap(mapSizeY + 1, mapSizeY);
 
 				//draw section
 				gameWindow.clear(sf::Color(100, 100, 100));

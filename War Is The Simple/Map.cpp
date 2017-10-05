@@ -6,11 +6,13 @@
 namespace WITS {
 
 	const std::string towerTileTextureImgSource = "./src/img/towerTileTexture.png",
-					fieldTileTextureImgSource = "./src/img/fieldTileTexture.png";
+		fieldTileTextureImgSource = "./src/img/fieldTileTexture.png";
 
 	class Map {
 	private:
-		std::vector<WITS::Tile> tiles;
+		//grid -- сетка
+		std::vector <std::vector <WITS::FieldTile> > fieldsGrid;
+		std::vector <std::vector <WITS::TowerTile> > towersGrid;
 		sf::Image fieldTileTextureImg, towerTileTextureImg;
 		sf::Texture fieldTileTexture, towerTileTexture;
 	public:
@@ -24,40 +26,56 @@ namespace WITS {
 			towerTileTexture.loadFromImage(towerTileTextureImg);
 			fieldTileTexture.setSmooth(true);
 			towerTileTexture.setSmooth(true);
-			
-			//xSize * ySize  - fieldTiles
-			//xSize * ySize + xSize  - towerTiles
-			tiles.resize(xSize * ySize + (ySize - 2) * (xSize - 1));
 
-			//TODO выравниваие по центру
-			const int test = 100;
-			//for fields
-			int iter = 0;
-			for (int y = 0; y < ySize; y++) {
-				for (int x = 0; x < xSize - y % 2; x++) {
+			//TODO выравнивание по центру
+			int moveX = 100, moveY = 100;
+			//grid[y][x]
+			fieldsGrid.resize(ySize);
+			//for id
+			//int iter = 0;
+			for (int y = 0; y < fieldsGrid.size(); y++) {
+				fieldsGrid[y].resize(xSize - y % 2);
+				for (int x = 0; x < fieldsGrid[y].size(); x++) {
 					sf::Sprite fieldTileSprite;
 					fieldTileSprite.setTexture(fieldTileTexture);
-					fieldTileSprite.setPosition((2 * x + y % 2) * fieldTileTextureImg.getSize().x / 2 + test, y  * fieldTileTextureImg.getSize().y / 2 + test);
+					fieldTileSprite.setPosition((2 * x + y % 2) * fieldTileTextureImg.getSize().x / 2, 
+						y  * fieldTileTextureImg.getSize().y / 2);
+					fieldTileSprite.move(moveX, moveY);
 					//add to tiles
-					tiles[iter] = (WITS::Tile(fieldTileSprite, iter++));
+					FieldTile fieldTile;
+					fieldTile.setSprite(fieldTileSprite);
+					fieldsGrid[y][x] = fieldTile;
 				}
 			}
 
-			//for towers
-			for (int y = 2; y < ySize; y++) {
-				for (int x = (y + 1) % 2; x < xSize - 1; x++) {
+			towersGrid.resize(ySize - 2);
+			for (int y = 0; y < towersGrid.size(); y++) {
+				towersGrid[y].resize(xSize - 2 + y % 2);
+				for (int x = 0; x < towersGrid[y].size(); x++) {
 					sf::Sprite towerTileSprite;
 					towerTileSprite.setTexture(towerTileTexture);
-					towerTileSprite.setPosition((2 * x + y % 2) * fieldTileTextureImg.getSize().x / 2 + test, y  * fieldTileTextureImg.getSize().y / 2 + test);
-					towerTileSprite.move((fieldTileTextureImg.getSize().x - towerTileTextureImg.getSize().x) / 2, -(int)(towerTileTextureImg.getSize().y / 2));
+					towerTileSprite.setPosition((2 * (x + 1 - y % 2) + y % 2) * fieldTileTextureImg.getSize().x / 2, 
+								(y + 2)  * fieldTileTextureImg.getSize().y / 2);
+					towerTileSprite.move((fieldTileTextureImg.getSize().x - towerTileTextureImg.getSize().x) / 2,
+						-(int)(towerTileTextureImg.getSize().y / 2));
+					towerTileSprite.move(moveX, moveY);
 					//add to tiles
-					tiles[iter] = (WITS::Tile(towerTileSprite, iter++));
+					TowerTile towerTile;
+					towerTile.setSprite(towerTileSprite);
+					towersGrid[y][x] = towerTile;
 				}
 			}
 		}
 		void drawToGameWindows(sf::RenderWindow& gameWindow) {
-			for (int i = 0; i < tiles.size(); i++) {
-				gameWindow.draw((tiles[i]).getTileSprite());
+			for (int y = 0; y < fieldsGrid.size(); y++) {
+				for (int x = 0; x < fieldsGrid[y].size(); x++) {
+					gameWindow.draw(fieldsGrid[y][x].getTileSprite());
+				}
+			}
+			for (int y = 0; y < towersGrid.size(); y++) {
+				for (int x = 0; x < towersGrid[y].size(); x++) {
+					gameWindow.draw(towersGrid[y][x].getTileSprite());
+				}
 			}
 		}
 	};

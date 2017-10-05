@@ -4,33 +4,30 @@
 #include "Player.cpp"
 
 namespace WITS {
+
 	class Tile {
 	private:
-		int id;
+		//int id;
 		//владелец клетки
 		WITS::Player *tileOwner;
 		//спрайт клетки
 		sf::Sprite tileSprite;
+		//текстура клетки
+		sf::Texture tileTexture;
 	public:
-		Tile(sf::Sprite sprite, int tileID) {
-			tileSprite = sprite;
-			//TODO genrate id
-			id = tileID;
-			tileOwner = NULL;
-		}
-		Tile() {}
 		sf::Sprite getTileSprite() {
 			return tileSprite;
+		}
+		void setSprite(sf::Sprite &sprite) {
+			tileSprite = sprite;
 		}
 	};
 
 	//for tower tiles
-	class TowerTile : Tile {
-
+	class TowerTile : public Tile {
 	};
 
 	//for cities or another industrial tiles
-	class FieldTile : Tile {
-
+	class FieldTile : public Tile {
 	};
 }
