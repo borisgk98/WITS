@@ -1,11 +1,12 @@
-#include <algorithm>
-#include <string>
-#include <SFML/Graphics.hpp>
+#include "WITS.h"
 
 namespace WITS {
-	class Player {
-	private:
-		std::string name;
-		sf::Color playerColor;
-	};
+	Player::Player() {}
+	Player::Player(std::string playerName, sf::Color playerColor) {
+		name = playerName;
+		color = playerColor;
+	}
+	sf::Color Player::getColor() {
+		return color;
+	}
 }

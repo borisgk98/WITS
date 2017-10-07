@@ -259,3 +259,5 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/War Is The Simple/debug.txt
+/War Is The Simple/test.png
